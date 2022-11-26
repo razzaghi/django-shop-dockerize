@@ -17,10 +17,12 @@ services:
       context: ./nginx
     restart: always
     volumes: 
+      - ecommerce:/home/app/web
       - ecommerce-media:/home/app/web/media/
       - ecommerce-static:/home/app/web/static/
 
 volumes:
+  ecommerce:
   ecommerce-media:
   ecommerce-static:
 
