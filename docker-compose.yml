@@ -16,6 +16,8 @@ services:
     build:
       context: ./nginx
     restart: always
+    ports:
+    - 80:80
     volumes: 
       - ecommerce:/home/app/web
       - ecommerce-media:/home/app/web/media/
