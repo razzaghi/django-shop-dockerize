@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-$vpxq=7p@&(e$d4%e3h0%g(l#1^@x!m=raytve45(k5mm7bogm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["ecommerce.shamim.review","127.0.0.1","localhost"]
 
 # Application definition
 
