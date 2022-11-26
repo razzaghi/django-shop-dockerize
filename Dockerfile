@@ -7,7 +7,6 @@ WORKDIR /code
 COPY requirements.txt /code/
 
 RUN pip install -r requirements.txt
-COPY .env /code/.env
 COPY start.sh /code/start.sh
 COPY . /code/
 
