@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  ecommerce:
+    build:
+      context: .
+
+    volumes:
+      - ecommerce:/code
+      - ecommerce-media:/code/media
+      - ecommerce-static:/code/static
+    environment:
+      - HOST=ecommerce.shamim.review
+
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    volumes: 
+      - ecommerce-media:/home/app/web/media/
+      - ecommerce-static:/home/app/web/static/
+
+volumes:
+  ecommerce-media:
+  ecommerce-static:
+

@@ -1,16 +1,52 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
     <!-- Start Featured Product -->
     <section class="bg-light">
         <div class="container py-5">
-            <div class="row text-center py-3">
-                <div class="col-lg-6 m-auto">
-                    <h1 class="h1">Featured Product</h1>
-                    <p>
-                        List of featured products
-                    </p>
+            <div class="row text-left py-3">
+                <div class="container">
+                    <form action="/" method="get">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="table_filter">Search Keyword</label>
+                                    <input id="table_filter" type="text" value="{{ q }}" name="q" class="form-control"
+                                           aria-label="Text input with segmented button dropdown">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select class="form-control" name="category" id="category">
+                                        {% if not selected_category %}
+                                            <option value="" selected>All</option>
+                                        {% else %}
+                                            <option value="0">All</option>
+                                        {% endif %}
+                                        {% for category in categories %}
+                                            {% if selected_category == category.id %}
+                                                <option value="{{ category.id }}" selected>{{ category.name }}</option>
+                                            {% else %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <button id="searchBtn" type="submit" class="btn mt-4 btn-secondary btn-search"><span
+                                            class="glyphicon glyphicon-search">&nbsp;</span> <span
+                                            class="label-icon">Search</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="row">
@@ -18,7 +54,13 @@
                     <div class="col-12 col-md-4 mb-4">
                         <div class="card h-100">
                             <a href="/detail/{{ product.id }}/">
-                                <img src="{{ product.image.url}}" width="200" height="200" class="card-img-top" alt="{{ product.name }}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" width="200" height="200" class="card-img-top"
+                                         alt="{{ product.name }}">
+                                {% else %}
+                                    <img src="{% static "assets/img/noproduct.jpg" %}" width="200" height="200"
+                                         class="card-img-top" alt="{{ product.name }}">
+                                {% endif %}
                             </a>
                             <div class="card-body">
                                 <ul class="list-unstyled d-flex justify-content-between">
@@ -29,11 +71,12 @@
                                         <i class="text-muted fa fa-star"></i>
                                         <i class="text-muted fa fa-star"></i>
                                     </li>
-                                    <li class="text-muted text-right">${{ product.price}}</li>
+                                    <li class="text-muted text-right">${{ product.price }}</li>
                                 </ul>
-                                <a href="/detail/{{ product.id }}/" class="h2 text-decoration-none text-dark">{{ product.name}}</a>
+                                <a href="/detail/{{ product.id }}/"
+                                   class="h2 text-decoration-none text-dark">{{ product.name }}</a>
                                 <p class="card-text">
-                                    {{ product.description}}
+                                    {{ product.description }}
                                 </p>
                                 <p class="text-muted">Reviews (24)</p>
                             </div>

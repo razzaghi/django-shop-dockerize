@@ -26,6 +26,7 @@ urlpatterns = [
     path('detail/<int:id>/', views.detail),
     path('about', views.about),
     path('contact', views.contact),
+    path('submit-product', views.submit_product),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
