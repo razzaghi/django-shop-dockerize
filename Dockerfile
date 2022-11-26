@@ -1,14 +1,19 @@
-FROM python:3.8
+FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
-RUN mkdir /code
+#RUN mkdir /app
 
-WORKDIR /code
-COPY requirements.txt /code/
+RUN apt update && apt install -y default-libmysqlclient-dev build-essential
 
-RUN pip install -r requirements.txt
-COPY start.sh /code/start.sh
-COPY . /code/
+WORKDIR /app
+
+COPY requirements.txt /app/
+
+RUN pip3 install -r requirements.txt
+COPY start.sh /app/start.sh
+COPY . /app/
+
+EXPOSE 8000
 
 RUN chmod +x start.sh
-CMD ["bash start.sh"]
+CMD ["./start.sh"]
