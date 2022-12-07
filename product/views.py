@@ -46,6 +46,10 @@ def submit_product(request):
     name = request.POST.get("name", None)
     price = request.POST.get("price", 0)
     image = request.POST.get("image", None)
+    image_1_url = request.POST.get("image_1_url", None)
+    image_2_url = request.POST.get("image_2_url", None)
+    image_3_url = request.POST.get("image_3_url", None)
+    image_4_url = request.POST.get("image_4_url", None)
     category = request.POST.get("category", None)
     rate = request.POST.get("rate", 0)
     review_count = request.POST.get("review_count", 0)
@@ -63,6 +67,10 @@ def submit_product(request):
         name=name,
         price=price,
         image=image,
+        image_1_url=image_1_url,
+        image_2_url=image_2_url,
+        image_3_url=image_3_url,
+        image_4_url=image_4_url,
         category_id=category,
         rate=rate,
         review_count=review_count,

@@ -12,6 +12,10 @@ class Product(models.Model):
     name = models.CharField(max_length=40, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     image = models.ImageField(default="not_found.jpg", upload_to="photos", null=True, blank=True)
+    image_1_url = models.URLField(null=True, blank=True)
+    image_2_url = models.URLField(null=True, blank=True)
+    image_3_url = models.URLField(null=True, blank=True)
+    image_4_url = models.URLField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     rate = models.IntegerField(default=0)
     review_count = models.IntegerField(default=0)
@@ -39,6 +43,10 @@ class Product(models.Model):
             name=self.name,
             price=self.price,
             image=image_address,
+            image_1_url=self.image_1_url,
+            image_2_url=self.image_2_url,
+            image_3_url=self.image_3_url,
+            image_4_url=self.image_4_url,
             category=category,
             rate=self.rate,
             review_count=self.review_count,
@@ -53,5 +61,5 @@ class Product(models.Model):
             description=self.description,
         )
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
