@@ -43,13 +43,21 @@ def detail(request, id):
 
 @csrf_exempt
 def submit_product(request):
+    api = request.POST.get("api", None)
+    if api != 'Ali123@123':
+        return JsonResponse(data={'Err': 'Wrong api'}, safe=False)
+
+    uniq_code = request.POST.get("uniq_code", None)
     name = request.POST.get("name", None)
+    title = request.POST.get("title", None)
     price = request.POST.get("price", 0)
     image = request.POST.get("image", None)
     image_1_url = request.POST.get("image_1_url", None)
     image_2_url = request.POST.get("image_2_url", None)
     image_3_url = request.POST.get("image_3_url", None)
     image_4_url = request.POST.get("image_4_url", None)
+    str_category = request.POST.get("str_category", None)
+    str_categories = request.POST.get("str_categories", None)
     category = request.POST.get("category", None)
     rate = request.POST.get("rate", 0)
     review_count = request.POST.get("review_count", 0)
@@ -62,9 +70,17 @@ def submit_product(request):
     product_status = request.POST.get("product_status", 0)
     price_status = request.POST.get("price_status", 0)
     description = request.POST.get("description", "")
+    if not category:
+        try:
+            category = Category.objects.get(name=str_category)
+        except:
+            Category.objects.create(name=str_category)
+        category = Category.objects.get(name=str_category).id
 
     product = Product.objects.create(
+        uniq_code=uniq_code,
         name=name,
+        title=title,
         price=price,
         image=image,
         image_1_url=image_1_url,
@@ -72,6 +88,8 @@ def submit_product(request):
         image_3_url=image_3_url,
         image_4_url=image_4_url,
         category_id=category,
+        str_category=str_category,
+        str_categories=str_categories,
         rate=rate,
         review_count=review_count,
         discount_percent=discount_percent,
@@ -84,7 +102,6 @@ def submit_product(request):
         price_status=price_status,
         description=description
     )
-
     return JsonResponse(data=json.dumps(product.as_json()), safe=False)
 
 

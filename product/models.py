@@ -9,7 +9,9 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=40, null=True, blank=True)
+    uniq_code = models.CharField(max_length=40, null=True, blank=True,unique=True)
+    name = models.CharField(max_length=100, null=True, blank=True)
+    title = models.CharField(max_length=150, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     image = models.ImageField(default="not_found.jpg", upload_to="photos", null=True, blank=True)
     image_1_url = models.URLField(null=True, blank=True)
@@ -17,17 +19,20 @@ class Product(models.Model):
     image_3_url = models.URLField(null=True, blank=True)
     image_4_url = models.URLField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-    rate = models.IntegerField(default=0)
+    str_category = models.CharField(max_length=60, null=True, blank=True)
+    str_categories = models.CharField(max_length=250, null=True, blank=True)
+    rate = models.DecimalField(max_digits=5, decimal_places=2,default=0)
     review_count = models.IntegerField(default=0)
-    discount_percent = models.IntegerField(default=0)
-    discount_start_date = models.DateField(null=True, blank=True)
-    discount_end_date = models.DateField(null=True, blank=True)
-    discount_code = models.CharField(max_length=200, null=True, blank=True)
-    special_discount = models.IntegerField(default=0)
+    discount_percent = models.DecimalField(max_digits=6, decimal_places=2,default=0)
+    discount_start_date = models.DateTimeField(null=True, blank=True)
+    discount_end_date = models.DateTimeField(null=True, blank=True)
+    discount_code = models.CharField(max_length=30, null=True, blank=True)
+    special_discount = models.DecimalField(max_digits=6, decimal_places=2,default=0)
     store_link = models.URLField(null=True, blank=True)
-    product_status = models.IntegerField(default=0)
-    price_status = models.IntegerField(default=0)
+    product_status = models.DecimalField(max_digits=5, decimal_places=2,default=0)
+    price_status = models.DecimalField(max_digits=5, decimal_places=2,default=0)
     description = models.TextField(null=True, blank=True)
+    channel = models.CharField(max_length=30, null=True, blank=True)
 
     def as_json(self):
 
