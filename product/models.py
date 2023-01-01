@@ -58,6 +58,17 @@ class Product(models.Model):
     agent_username = models.CharField(max_length=30, null=True, blank=True)
 
     @property
+    def product_score(self):
+        return Tools.star_html(self.p_score/2)
+
+    @property
+    def store_score(self):
+        return Tools.star_html(self.s_score/2)
+
+    @property
+    def price_score(self):
+        return Tools.star_html(self.price_status)
+    @property
     def total_discount(self):
         return int(min(100,self.off_percent + (100-self.off_percent)*(self.discount_percent + self.coupon_off_percent)/100))
 

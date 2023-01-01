@@ -92,16 +92,16 @@
                                 <a href="{{ product.tagged_url }}/" target="_blank" class="offer_button button"> Buy at Amazon  ➥</a>
                                 <div class="list-unstyled d-flex justify-content-between rating">
                                     <div>
-                                        <div>Product: </div>
-                                        <div>{{ product.product_rating_html }}</div>
+                                        <div>Quality: </div>
+                                        <div>{{ product.product_score }}</div>
                                     </div>
                                     <div>
                                         <div>Valuable: </div>
-                                        <div>{{ product.product_rating_html }}</div>
+                                        <div>{{ product.price_score }}</div>
                                     </div>
                                     <a href="{{ product.tagged_store_link }}" target="_blank" class="link-no-line">
                                         <div>Store : </div>
-                                        <div>{{ product.product_rating_html }}</div>
+                                        <div>{{ product.store_score }}</div>
                                     </a>
                                 </div>
                             </div>
