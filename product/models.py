@@ -58,7 +58,18 @@ class Product(models.Model):
 
     @property
     def product_score(self):
-        return Tools.star_html(self.p_score/2)
+        r = 0
+        if self.rate >= 4.5  and self.review_count >= 100:
+            r = 5
+        elif self.rate >= 4 and self.review_count >= 1000:
+            r = 5
+        elif self.rate >= 4 and self.rate >= 100:
+            r = 4
+        elif self.rate == 0:
+            r = 2.5
+        else:
+            r = 1.5
+        return Tools.star_html(r)
 
     @property
     def store_score(self):
