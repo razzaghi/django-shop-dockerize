@@ -1,7 +1,7 @@
 FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
-#RUN mkdir /app
+RUN mkdir /app
 
 RUN apt update && apt install -y default-libmysqlclient-dev build-essential
 
