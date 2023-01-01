@@ -71,9 +71,7 @@ class Product(models.Model):
         return format((100-self.total_discount()) * self.old_price / 100,',.2f')
 
     def disp_image(self):
-        if self.image:
-            return self.image.url if self.image else self.image_url
-        return ""
+        return self.image.url if self.image else self.image_url
 
     def tagged_url(self):
         if self.url:
