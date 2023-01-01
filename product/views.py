@@ -162,14 +162,20 @@ def submit_product(request):
 
 
 def about(request):
-    return render(request, 'about.html', {})
+    categories = Category.objects.all()
+    context = {'categories': categories}
+    return render(request, 'about.html', context)
 
 def more_info(request):
-    return render(request, 'more_info.html', {})
+    categories = Category.objects.all()
+    context ={'categories':categories}
+    return render(request, 'more_info.html', context)
 
 
 def contact(request):
-    return render(request, 'contact.html', {})
+    categories = Category.objects.all()
+    context = {'categories': categories}
+    return render(request, 'contact.html', context)
 
 class HomeView(ListView):
     model = Product
