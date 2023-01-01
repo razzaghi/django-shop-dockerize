@@ -7,15 +7,16 @@ Custom Css
     font-weight: bolder;
 }
 img.card__image {
-    max-height: 350px;
-    min-height: 350px;
-    min-width: 395px;
-    max-width: 395px;
+    object-fit: scale-down;
+    max-height: 320px;
+    min-height: 320px;
+    min-width: 345px;
+    max-width: 345px;
 }
 
 .card-main {
-    min-width: 400px;
-    max-width: 400px;
+    min-width: 350px;
+    max-width: 350px;
 }
 .rating{
     background: floralwhite;
@@ -84,5 +85,5 @@ img.card__image {
 
 }
 .card-text {
-  min-height: 110px;
+  min-height: 75px;
 }

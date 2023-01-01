@@ -7,6 +7,7 @@ Custom Css
     font-weight: bolder;
 }
 img.card__image {
+    object-fit: scale-down;
     max-height: 350px;
     min-height: 350px;
     min-width: 395px;
@@ -81,5 +82,8 @@ img.card__image {
 }
 .logo-text{
     color: #fd7e14;
-    
+
+}
+.card-text {
+  min-height: 110px;
 }
