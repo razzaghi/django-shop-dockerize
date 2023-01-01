@@ -57,8 +57,11 @@ class Product(models.Model):
     agent_tag = models.CharField(max_length=30, null=True, blank=True)
     agent_username = models.CharField(max_length=30, null=True, blank=True)
 
+    @property
     def total_discount(self):
         return int(min(100,self.off_percent + (100-self.off_percent)*(self.discount_percent + self.coupon_off_percent)/100))
+
+    #total_discount = property(_total_discount)
 
     def total_discount_str(self):
         m_str = ''
@@ -68,7 +71,7 @@ class Product(models.Model):
         return m_str
 
     def final_price(self):
-        return format((100-self.total_discount()) * self.old_price / 100,',.2f')
+        return format((100-self.total_discount) * self.old_price / 100,',.2f')
 
     def disp_image(self):
         return self.image.url if self.image else self.image_url
