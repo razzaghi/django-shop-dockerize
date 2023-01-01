@@ -5,8 +5,8 @@ services:
     build:
       context: .
 
-    volumes:
-      - ecommerce:/app
+#    volumes:
+#      - ecommerce:/app
 #      - ecommerce-media:/app/media
 #      - ecommerce-static:/app/static
     environment:
@@ -44,7 +44,7 @@ services:
 #      - ecommerce-static:/home/app/web/static/
 
 volumes:
-  ecommerce:
+#  ecommerce:
   ecommerce-db:
 #  ecommerce-media:
 #  ecommerce-static:
