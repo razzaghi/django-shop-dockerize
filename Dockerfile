@@ -18,4 +18,4 @@ COPY . /app/
 EXPOSE 8000
 
 RUN chmod +x start.sh
-CMD ["./start.sh"]
+CMD ["bash start.sh"]
