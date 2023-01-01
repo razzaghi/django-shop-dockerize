@@ -6,9 +6,9 @@ services:
       context: .
 
     volumes:
-      - ecommerce:/app
-      - ecommerce-media:/app/media
-      - ecommerce-static:/app/static
+      - ecommerce:/code
+      - ecommerce-media:/code/media
+      - ecommerce-static:/code/static
     environment:
       - HOST=ecommerce.shamim.review
 
