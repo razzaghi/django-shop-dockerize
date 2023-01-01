@@ -10,8 +10,8 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 RUN pip3 install -r requirements.txt
-COPY start.sh /app/start.sh
-COPY gunicorn.py /app/gunicorn.py
+COPY start.sh /app/
+COPY gunicorn.py /app/
 COPY . /app/
 
 EXPOSE 8000
