@@ -71,13 +71,19 @@ class Product(models.Model):
         return format((100-self.total_discount()) * self.old_price / 100,',.2f')
 
     def disp_image(self):
-        return self.image.url if self.image else self.image_url
+        if self.image:
+            return self.image.url if self.image else self.image_url
+        return ""
 
     def tagged_url(self):
-        return f'{self.url}{"&"if self.url.__contains__("?") else "?"}tag={self.agent_tag}'
+        if self.url:
+            return f'{self.url}{"&"if self.url.__contains__("?") else "?"}tag={self.agent_tag}'
+        return "-"
 
     def tagged_store_link(self):
-        return f'{self.store_link}{"&"if self.store_link.__contains__("?") else "?"}tag={self.agent_tag}'
+        if self.store_link:
+            return f'{self.store_link}{"&"if self.store_link.__contains__("?") else "?"}tag={self.agent_tag}'
+        return "-"
 
     def product_rating_html(self):
         return Tools.star_html(self.product_status)
