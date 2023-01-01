@@ -5,10 +5,10 @@ services:
     build:
       context: .
 
-    volumes:
-      - ecommerce:/app
-      - ecommerce-media:/app/media
-      - ecommerce-static:/app/static
+#    volumes:
+#      - ecommerce:/app
+#      - ecommerce-media:/app/media
+#      - ecommerce-static:/app/static
     environment:
       - HOST=ecommerce.shamim.review
 
@@ -38,14 +38,14 @@ services:
     restart: always
     ports:
     - 80:80
-    volumes: 
-      - ecommerce:/home/app/web
-      - ecommerce-media:/home/app/web/media/
-      - ecommerce-static:/home/app/web/static/
+#    volumes:
+#      - ecommerce:/home/app/web
+#      - ecommerce-media:/home/app/web/media/
+#      - ecommerce-static:/home/app/web/static/
 
 volumes:
-  ecommerce:
+#  ecommerce:
   ecommerce-db:
-  ecommerce-media:
-  ecommerce-static:
+#  ecommerce-media:
+#  ecommerce-static:
 
