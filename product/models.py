@@ -1,4 +1,5 @@
 from django.db import models
+from django.http import HttpResponse
 
 
 class Category(models.Model):
@@ -10,6 +11,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     #main product attr
+    create_date = models.DateTimeField(auto_now_add=True)
     uniq_code = models.CharField(max_length=40, null=True, blank=True,unique=True)
     asin = models.CharField(max_length=20, null=True, blank=True)
     domain = models.CharField(max_length=10, null=True, blank=True)
@@ -55,8 +57,31 @@ class Product(models.Model):
     agent_tag = models.CharField(max_length=30, null=True, blank=True)
     agent_username = models.CharField(max_length=30, null=True, blank=True)
 
+    def total_discount(self):
+        return int(min(100,self.off_percent + (100-self.off_percent)*(self.discount_percent + self.coupon_off_percent)/100))
+
+    def total_discount_str(self):
+        m_str = ''
+        m_str += '📦' if self.discount_percent > 0 else ''
+        m_str += '🔖' if self.off_percent >= 0 else ''
+        m_str += '✂' if self.coupon_off_percent >= 0 else ''
+        return m_str
+
+    def final_price(self):
+        return format((100-self.total_discount()) * self.old_price / 100,',.2f')
+
     def disp_image(self):
         return self.image.url if self.image else self.image_url
+
+    def tagged_url(self):
+        return f'{self.url}{"&"if self.url.__contains__("?") else "?"}tag={self.agent_tag}'
+
+    def tagged_store_link(self):
+        return f'{self.store_link}{"&"if self.store_link.__contains__("?") else "?"}tag={self.agent_tag}'
+
+    def product_rating_html(self):
+        return Tools.star_html(self.product_status)
+
     def as_json(self):
         return dict(
             id=self.id,
@@ -107,3 +132,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Tools:
+    @staticmethod
+    def star_html(rate=5):
+        return '✅✅✅✅' if rate>=4.5 else '✅✅✅' if rate>=3 else '✅✅' if rate>=2 else '✅'

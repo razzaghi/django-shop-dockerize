@@ -1,3 +1,84 @@
 /*
 Custom Css
 */
+.color-dot-blue {
+    color: chocolate;
+    font-size: xx-large;
+    font-weight: bolder;
+}
+img.card__image {
+    max-height: 350px;
+    min-height: 350px;
+    min-width: 395px;
+    max-width: 395px;
+}
+
+.card-main {
+    min-width: 400px;
+    max-width: 400px;
+}
+.rating{
+    background: floralwhite;
+}
+.link-no-line{
+    text-decoration: none;
+}
+
+.off-price {
+    background: floralwhite;
+    padding: 10px;
+}
+.old-price{
+    color: darkgray;
+}
+.final-price{
+    font-weight: bolder ;
+    color: green;
+}
+ .button{
+    border-radius: 3px;
+    background: darkblue;
+    color: white;
+    padding: 0.4em 1em;
+    border: 0;
+    line-height: 1.6;
+    display: inline-block;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0px 0px 0px -7px rgb(0 0 0 / 0%);
+}
+ .offer_button {
+    font-weight: 700;
+    font-size: 16px;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+ .price{
+    width: fit-content;
+ }
+ .category{
+     padding: 5px;
+     background: floralwhite;
+     color: gray;
+ }
+.card_more_info{
+    color: gray;
+    text-align: center;
+    margin-top: 0px;
+}
+.more_info{
+    padding-left: 25%;
+    padding-right: 25%;
+    padding-top: 30px;
+}
+.logo-img{
+    padding-right: 20px;
+    min-width: 80px;
+    max-width: 80px;
+}
+.logo-text{
+    color: #fd7e14;
+}

@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-    <!-- Start Featured Product -->
     <section class="bg-light">
         <div class="container py-5">
             <div class="row text-left py-3">
@@ -16,8 +14,7 @@
                                            aria-label="Text input with segmented button dropdown">
                                 </div>
                             </div>
-
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="category">Category</label>
                                     <select class="form-control" name="category" id="category">
@@ -39,6 +36,21 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
+                                    <label for="category">Sort by</label>
+                                    <select class="form-control" name="sort" id="sort">
+                                        {% for s in sorts %}
+                                            {% if sort == s.value %}
+                                                <option value="{{ s.value }}" selected>{{ s.text }}</option>
+                                            {% else %}
+                                                <option value="{{ s.value }}">{{ s.text }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
                                     <button id="searchBtn" type="submit" class="btn mt-4 btn-secondary btn-search"><span
                                             class="glyphicon glyphicon-search">&nbsp;</span> <span
                                             class="label-icon">Search</span>
@@ -49,42 +61,66 @@
                     </form>
                 </div>
             </div>
-            <div class="row">
+            <div class="row infinite-container content-section">
                 {% for product in products %}
-                    <div class="col-12 col-md-4 mb-4">
-                        <div class="card h-100">
-                            <a href="/detail/{{ product.id }}/">
+                    <div class="col-12 col-md-4 mb-4 infinite-item">
+                        <div class="card card-main">
+                            <a href="?category={{ product.category_id }}" target="_blank" class="category link-no-line">
+                                📰{{ product.category }}
+                            </a>
+                            <a href="{{ product.tagged_url }}/" target="_blank">
                                 {% if product.disp_image %}
-                                    <img src="{{ product.disp_image }}" width="200" height="200" class="card-img-top"
+                                    <img class="card__image" src="{{ product.disp_image }}"
                                          alt="{{ product.name }}">
-                                {% else %}
-                                    <img src="{% static "assets/img/noproduct.jpg" %}" width="200" height="200"
-                                         class="card-img-top" alt="{{ product.name }}">
                                 {% endif %}
                             </a>
                             <div class="card-body">
-                                <ul class="list-unstyled d-flex justify-content-between">
+                                <ul class="list-unstyled d-flex justify-content-between off-price">
                                     <li>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-warning fa fa-star"></i>
-                                        <i class="text-muted fa fa-star"></i>
-                                        <i class="text-muted fa fa-star"></i>
+                                    <div class="color-dot-blue">OFF {{ product.total_discount }}% ({{ product.total_discount_str }})</div>
+                                    <div> Code: {{ product.promo_code }}</div>
                                     </li>
-                                    <li class="text-muted text-right">${{ product.price }}</li>
+                                    <li>
+                                    <del class="old-price price">${{ product.old_price }}</del>
+                                    <div class="final-price price">${{ product.final_price }}</div>
+                                    </li>
                                 </ul>
-                                <a href="/detail/{{ product.id }}/"
-                                   class="h2 text-decoration-none text-dark">{{ product.name }}</a>
+                                <h3 class="h3 text-decoration-none text-dark">{{ product.name |slice:"0:50"}}</h3>
                                 <p class="card-text">
-                                    {{ product.description }}
+                                    {{ product.title |slice:"0:150" }}
                                 </p>
-                                <p class="text-muted">Reviews (24)</p>
+                                <a href="{{ product.tagged_url }}/" target="_blank" class="offer_button button"> Buy at Amazon  ➥</a>
+                                <div class="list-unstyled d-flex justify-content-between rating">
+                                    <div>
+                                        <div>Product: </div>
+                                        <div>{{ product.product_rating_html }}</div>
+                                    </div>
+                                    <div>
+                                        <div>Valuable: </div>
+                                        <div>{{ product.product_rating_html }}</div>
+                                    </div>
+                                    <a href="{{ product.tagged_store_link }}" target="_blank" class="link-no-line">
+                                        <div>Store : </div>
+                                        <div>{{ product.product_rating_html }}</div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                        <div class="card_more_info">Amazon Price As of {{ product.discount_start_date }} </div>
+                        <div class="card_more_info "><a href="/more-info" target="_blank">more info</a></div>
                     </div>
                 {% endfor %}
+
             </div>
+            {% if page_obj.has_next %}
+                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                {% endif %}
+                <div class="d-flex justify-content-center" style="display:none;">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
         </div>
+
     </section>
-    <!-- End Featured Product -->
 {% endblock content %}

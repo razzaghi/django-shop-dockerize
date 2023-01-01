@@ -4,9 +4,22 @@ from django.http import JsonResponse
 from django.shortcuts import render
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView
 
 from product.models import Product, Category
 
+class MOptions:
+    def __int__(self,value, text):
+        self.value = value
+        self.text = text
+
+sorts = [['new','Newest'],
+         ['name','Name'],
+         ['price_low','Price low'],
+         ['price_high','Price high'],
+         ['discount_low','Discount low'],
+         ['discount_high','Discount high'],
+         ]
 
 def home(request):
     products = Product.objects.all()
@@ -30,6 +43,7 @@ def home(request):
         "q": request.GET.get("q", ""),
         "selected_category": int(selected_category)
     }
+
     return render(request, 'index.html', context)
 
 
@@ -150,6 +164,60 @@ def submit_product(request):
 def about(request):
     return render(request, 'about.html', {})
 
+def more_info(request):
+    return render(request, 'more_info.html', {})
+
 
 def contact(request):
     return render(request, 'contact.html', {})
+
+class HomeView(ListView):
+    model = Product
+    template_name = 'index.html'
+    paginate_by = 3  # if pagination is desired
+    context_object_name = 'products'
+
+    def get_queryset(self):
+       qs = super().get_queryset()
+       if self.request.GET:
+           kwargs = {}
+           self.q = self.request.GET.get("q", '')
+           self.selected_category = self.request.GET.get("category", 0)
+           self.selected_category = int(self.selected_category) if self.selected_category != '' else 0
+           if self.q != '':
+               kwargs['name__icontains'] = self.q
+           if self.selected_category > 0:
+               kwargs['category_id'] = int(self.selected_category)
+           qs = qs.filter(**kwargs)
+
+       self.sort = self.request.GET.get("sort", "new").lower()
+       if self.sort == "new":
+           qs.order_by("-create_date")
+
+       return qs
+
+    def get_context_data(self, **kwargs):
+        self.selected_category = 0
+        context = super().get_context_data(**kwargs)
+        self.categories = Category.objects.all()
+        self.get_queryset()
+        context['categories'] = self.categories
+        context['q'] = self.request.GET.get("q", '')
+        context["selected_category"] = int(self.selected_category)
+        self.sorts = []
+        for s in sorts:
+            if s[0] == self.sort:
+                o = MOptions()
+                o.value = s[0]
+                o.text = s[1]
+                self.sorts.append(o)
+                break
+        for s in sorts:
+            if s[0] != self.sort:
+                o = MOptions()
+                o.value = s[0]
+                o.text = s[1]
+                self.sorts.append(o)
+        context["sorts"] = self.sorts
+        context['sort'] = self.sort
+        return context

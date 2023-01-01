@@ -22,9 +22,10 @@ from product import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home),
+    path('', views.HomeView.as_view()),
     path('detail/<int:id>/', views.detail),
     path('about', views.about),
+    path('more-info', views.more_info),
     path('contact', views.contact),
     path('submit-product', views.submit_product),
 ]
