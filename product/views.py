@@ -17,8 +17,8 @@ sorts = [['new','Newest'],
          ['name','Name'],
          ['price_low','Price low'],
          ['price_high','Price high'],
-         ['discount_low','Discount low'],
          ['discount_high','Discount high'],
+         ['p_score_high','Score high'],
          ]
 
 def home(request):
@@ -174,11 +174,12 @@ def contact(request):
 class HomeView(ListView):
     model = Product
     template_name = 'index.html'
-    paginate_by = 3  # if pagination is desired
+    paginate_by = 30  # if pagination is desired
     context_object_name = 'products'
 
     def get_queryset(self):
        qs = super().get_queryset()
+       #return qs
        if self.request.GET:
            kwargs = {}
            self.q = self.request.GET.get("q", '')
@@ -189,10 +190,19 @@ class HomeView(ListView):
            if self.selected_category > 0:
                kwargs['category_id'] = int(self.selected_category)
            qs = qs.filter(**kwargs)
-
        self.sort = self.request.GET.get("sort", "new").lower()
        if self.sort == "new":
            qs.order_by("-create_date")
+       elif self.sort == "name":
+           qs.order_by("name","-create_date")
+       elif self.sort == "price_low":
+           qs.order_by("old_price","-create_date")
+       elif self.sort == "price_high":
+           qs.order_by("-old_price","-create_date")
+       elif self.sort == "p_score_low":
+           qs.order_by("-p_score","-create_date")
+       elif self.sort == "discount_high":
+           qs.order_by("-discount_percent","-off_percent","-coupon_off_percent","-create_date")
 
        return qs
 
@@ -206,18 +216,10 @@ class HomeView(ListView):
         context["selected_category"] = int(self.selected_category)
         self.sorts = []
         for s in sorts:
-            if s[0] == self.sort:
-                o = MOptions()
-                o.value = s[0]
-                o.text = s[1]
-                self.sorts.append(o)
-                break
-        for s in sorts:
-            if s[0] != self.sort:
-                o = MOptions()
-                o.value = s[0]
-                o.text = s[1]
-                self.sorts.append(o)
+            o = MOptions()
+            o.value = s[0]
+            o.text = s[1]
+            self.sorts.append(o)
         context["sorts"] = self.sorts
         context['sort'] = self.sort
         return context

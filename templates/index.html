@@ -106,7 +106,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card_more_info">Amazon Price As of {{ product.discount_start_date }} </div>
+                        <div class="card_more_info">Amazon Price As of {{ product.create_date }} </div>
                         <div class="card_more_info "><a href="/more-info" target="_blank">more info</a></div>
                     </div>
                 {% endfor %}
@@ -114,12 +114,13 @@
             </div>
             {% if page_obj.has_next %}
                 <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-                {% endif %}
+            {% else %}
                 <div class="d-flex justify-content-center" style="display:none;">
                     <div class="spinner-border" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
+            {% endif %}
         </div>
 
     </section>
