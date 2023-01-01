@@ -63,7 +63,7 @@ class Product(models.Model):
             r = 5
         elif self.rate >= 4 and self.review_count >= 1000:
             r = 5
-        elif self.rate >= 4 and self.rate >= 100:
+        elif self.rate >= 4 and self.review_count >= 100:
             r = 4
         elif self.rate == 0:
             r = 2.5
