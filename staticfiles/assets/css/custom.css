@@ -83,3 +83,6 @@ img.card__image {
     color: #fd7e14;
 
 }
+.card-text {
+  min-height: 110px;
+}
