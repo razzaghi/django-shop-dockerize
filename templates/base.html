@@ -129,7 +129,7 @@
                     <ul class="list-unstyled text-light footer-link-list">
                         {% for category in categories|slice:"0:8" %}
 
-                            <li><a class="text-decoration-none" href="{{ category.id }}">{{ category.name }}</a></li>
+                            <li><a class="text-decoration-none" href="/?category={{ category.id }}">{{ category.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
