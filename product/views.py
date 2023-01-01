@@ -1,5 +1,4 @@
 import json
-
 from django.http import JsonResponse
 from django.shortcuts import render
 # Create your views here.
@@ -8,18 +7,21 @@ from django.views.generic import ListView
 
 from product.models import Product, Category
 
+
 class MOptions:
-    def __int__(self,value, text):
+    def __int__(self, value, text):
         self.value = value
         self.text = text
 
-sorts = [['new','Newest'],
-         ['name','Name'],
-         ['price_low','Price low'],
-         ['price_high','Price high'],
-         ['discount_high','Discount high'],
-         ['p_score_high','Score high'],
+
+sorts = [['new', 'Newest'],
+         ['name', 'Name'],
+         ['price_low', 'Price low'],
+         ['price_high', 'Price high'],
+         ['discount_high', 'Discount high'],
+         ['p_score_high', 'Score high'],
          ]
+
 
 def home(request):
     products = Product.objects.all()
@@ -164,12 +166,14 @@ def submit_product(request):
 def about(request):
     return render(request, 'about.html', {})
 
+
 def more_info(request):
     return render(request, 'more_info.html', {})
 
 
 def contact(request):
     return render(request, 'contact.html', {})
+
 
 class HomeView(ListView):
     model = Product
@@ -178,33 +182,34 @@ class HomeView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-       qs = super().get_queryset()
-       #return qs
-       if self.request.GET:
-           kwargs = {}
-           self.q = self.request.GET.get("q", '')
-           self.selected_category = self.request.GET.get("category", 0)
-           self.selected_category = int(self.selected_category) if self.selected_category != '' else 0
-           if self.q != '':
-               kwargs['name__icontains'] = self.q
-           if self.selected_category > 0:
-               kwargs['category_id'] = int(self.selected_category)
-           qs = qs.filter(**kwargs)
-       self.sort = self.request.GET.get("sort", "new").lower()
-       if self.sort == "new":
-           qs.order_by("-create_date")
-       elif self.sort == "name":
-           qs.order_by("name","-create_date")
-       elif self.sort == "price_low":
-           qs.order_by("old_price","-create_date")
-       elif self.sort == "price_high":
-           qs.order_by("-old_price","-create_date")
-       elif self.sort == "p_score_low":
-           qs.order_by("-p_score","-create_date")
-       elif self.sort == "discount_high":
-           qs.order_by("-discount_percent","-off_percent","-coupon_off_percent","-create_date")
+        qs = super().get_queryset()
+        # return qs
+        if self.request.GET:
+            kwargs = {}
+            self.q = self.request.GET.get("q", '')
+            self.selected_category = self.request.GET.get("category", 0)
+            self.selected_category = int(self.selected_category) if self.selected_category != '' else 0
+            if self.q != '':
+                kwargs['name__icontains'] = self.q
+            if self.selected_category > 0:
+                kwargs['category_id'] = int(self.selected_category)
+            qs = qs.filter(**kwargs)
+        self.sort = self.request.GET.get("sort", "new").lower()
+        if self.sort == "new":
+            return qs.order_by("-create_date")
+        elif self.sort == "name":
+            print("============== Name ================")
+            return qs.order_by("name", "-create_date")
+        elif self.sort == "price_low":
+            return qs.order_by("old_price", "-create_date")
+        elif self.sort == "price_high":
+            return qs.order_by("-old_price", "-create_date")
+        elif self.sort == "p_score_low":
+            return qs.order_by("-p_score", "-create_date")
+        elif self.sort == "discount_high":
+            return qs.order_by("-discount_percent", "-off_percent", "-coupon_off_percent", "-create_date")
 
-       return qs
+        return qs
 
     def get_context_data(self, **kwargs):
         self.selected_category = 0
