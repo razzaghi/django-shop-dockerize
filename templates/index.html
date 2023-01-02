@@ -113,7 +113,9 @@
 
             </div>
             {% if page_obj.has_next %}
-                <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                <div>
+                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Load more deals</a>
+                </div>
             {% else %}
                 <div class="d-flex justify-content-center" style="display:none;">
                     <div class="spinner-border" role="status">

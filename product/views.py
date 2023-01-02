@@ -180,7 +180,7 @@ def contact(request):
 class HomeView(ListView):
     model = Product
     template_name = 'index.html'
-    paginate_by = 30  # if pagination is desired
+    paginate_by = 3  # if pagination is desired
     context_object_name = 'products'
 
     def get_queryset(self):

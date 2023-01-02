@@ -87,3 +87,14 @@ img.card__image {
 .card-text {
   min-height: 75px;
 }
+
+.infinite-more-link{
+    text-align: center;
+    color: white;
+    background: #fd7e14;
+    font-weight: bold;
+    font-size: 200px;
+    display: flow-root;
+    width: 100%;
+    padding: 10px;
+}
