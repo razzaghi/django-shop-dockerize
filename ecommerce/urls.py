@@ -22,12 +22,14 @@ from product import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HomeView.as_view()),
+    path('', views.HomeView.as_view(),name='index'),
     path('detail/<int:id>/', views.detail),
     path('about', views.about),
     path('more-info', views.more_info),
     path('contact', views.contact),
     path('submit-product', views.submit_product),
+    path('like/', views.like, name='like'),
+    path('dislike/<int:id>/', views.dislike, name='dislike'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -87,8 +87,8 @@ class Product(models.Model):
     def total_discount_str(self):
         m_str = ''
         m_str += '📦' if self.discount_percent > 0 else ''
-        m_str += '🔖' if self.off_percent >= 0 else ''
-        m_str += '✂' if self.coupon_off_percent >= 0 else ''
+        m_str += '🔖' if self.off_percent > 0 else ''
+        m_str += '✂' if self.coupon_off_percent > 0 else ''
         return m_str
 
     def final_price(self):

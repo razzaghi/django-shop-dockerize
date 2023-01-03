@@ -1,7 +1,9 @@
 import json
 
-from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
@@ -229,3 +231,37 @@ class HomeView(ListView):
         context["sorts"] = self.sorts
         context['sort'] = self.sort
         return context
+
+def like(request, id):
+    if request.method == "POST":
+        #make sure user can't like the post more than once.
+        user = User.objects.get(username=request.user.username)
+        #find whatever post is associated with like
+        product = Product.objects.get(id=id)
+
+        # newLike = Like(user=user, post=post)
+        # newLike.alreadyLiked = True
+        #
+        # post.likes += 1
+        # #adds user to Post
+        # post.user_likes.add(user)
+        # post.save()
+        # newLike.save()
+        return HttpResponseRedirect(reverse('index'))
+
+def dislike(request, id):
+    if request.method == "POST":
+        #make sure user can't like the post more than once.
+        user = User.objects.get(username=request.user.username)
+        #find whatever post is associated with like
+        product = Product.objects.get(id=id)
+
+        # newLike = Like(user=user, post=post)
+        # newLike.alreadyLiked = True
+        #
+        # post.likes += 1
+        # #adds user to Post
+        # post.user_likes.add(user)
+        # post.save()
+        # newLike.save()
+        return HttpResponseRedirect(reverse('index'))

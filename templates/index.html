@@ -105,6 +105,14 @@
                                     </a>
                                 </div>
                             </div>
+                        <div class="like-dislike">
+
+    <form action="{% url 'dislike' product.id %}" method="post" name="dislike" id="dislikeform-{{ product.id }}">
+        {% csrf_token %}
+        <button type='submit' name='dislike' value="{{ product.id }}" class="btn btn-primary">❤️‍🔥</button>
+    </form>
+
+                        </div>
                         </div>
                         <div class="card_more_info">Amazon Price As of {{ product.create_date }} </div>
                         <div class="card_more_info "><a href="/more-info" target="_blank">more info</a></div>
