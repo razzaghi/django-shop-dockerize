@@ -17,6 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 
+from account.views import SignUpView
 from ecommerce import settings
 from product import views as p_views
 
@@ -30,6 +31,7 @@ urlpatterns = [
     path('submit-product', p_views.submit_product),
     path('commands/<str:command>/', p_views.commands, name='commands'),
     path('p/<str:command>/', p_views.redirect, name='p'),
+    path('signup/', SignUpView.as_view(), name='signup'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
