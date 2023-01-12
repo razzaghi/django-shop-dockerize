@@ -13,6 +13,7 @@ class Category(models.Model):
     def title_(self):
         return self.title if self.title else self.name
 
+
 class Product(models.Model):
     #main product attr
     create_date = models.DateTimeField(auto_now_add=True)
