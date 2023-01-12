@@ -1,0 +1,27 @@
+<select class="form-control" name="sort" id="sort">
+    {% if sort == 'new' %}
+        <option value="new" selected>Newest</option>
+    {% else %}
+        <option value="new">Newest</option>
+    {% endif %}
+    {% if sort == 'price_low' %}
+        <option value="price_low" selected>Price low</option>
+    {% else %}
+        <option value="price_low">Price low</option>
+    {% endif %}
+    {% if sort == 'price_high' %}
+        <option value="price_high" selected>Price high</option>
+    {% else %}
+        <option value="price_high">Price high</option>
+    {% endif %}
+    {% if sort == 'discount_high' %}
+        <option value="discount_high" selected>Discount high</option>
+    {% else %}
+        <option value="discount_high">Discount high</option>
+    {% endif %}
+    {% if sort == 'p_score_high' %}
+        <option value="p_score_high" selected>Score high</option>
+    {% else %}
+        <option value="p_score_high">Score high</option>
+    {% endif %}
+</select>

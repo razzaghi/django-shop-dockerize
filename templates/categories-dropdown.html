@@ -1,0 +1,16 @@
+{% load custom_tags %}
+{% categories  as m_categories %}
+<select class="form-control" name="category" id="category">
+    {% if not selected_category %}
+        <option value="" selected>All</option>
+    {% else %}
+        <option value="0">All</option>
+    {% endif %}
+    {% for category in m_categories %}
+        {% if selected_category == category.id %}
+            <option value="{{ category.id }}" selected>{{ category.title_ }}</option>
+        {% else %}
+            <option value="{{ category.id }}">{{ category.title_ }}</option>
+        {% endif %}
+    {% endfor %}
+</select>

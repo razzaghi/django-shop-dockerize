@@ -4,10 +4,15 @@ from account.models import CustomUser
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=60)
+    title = models.CharField(max_length=40,blank=True,null=True)
 
     def __str__(self):
         return self.name
+
+    @property
+    def title_(self):
+        return self.title if self.title else self.name
 
 class Product(models.Model):
     #main product attr

@@ -16,21 +16,6 @@ from django.views.generic import ListView
 import account.models
 from product.models import Product, Category
 
-class MOptions:
-    def __int__(self,value, text):
-        self.value = value
-        self.text = text
-
-sorts = [['new','Newest'],
-         ['name','Name'],
-         ['price_low','Price low'],
-         ['price_high','Price high'],
-         ['discount_high','Discount high'],
-         ['p_score_high','Score high'],
-         ]
-
-
-
 def detail(request, id):
     product = Product.objects.get(id=id)
     context = {
@@ -146,19 +131,16 @@ def submit_product(request):
 
 
 def about(request):
-    categories = Category.objects.all()
-    context = {'categories': categories}
+    context = {}
     return render(request, 'about.html', context)
 
 def more_info(request):
-    categories = Category.objects.all()
-    context ={'categories':categories}
+    context ={}
     return render(request, 'more_info.html', context)
 
 
 def contact(request):
-    categories = Category.objects.all()
-    context = {'categories': categories}
+    context = {}
     return render(request, 'contact.html', context)
 
 class HomeView(ListView):
@@ -199,18 +181,9 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         self.selected_category = 0
         context = super().get_context_data(**kwargs)
-        self.categories = Category.objects.all()
         self.get_queryset()
-        context['categories'] = self.categories
         context['q'] = self.request.GET.get("q", '')
         context["selected_category"] = int(self.selected_category)
-        self.sorts = []
-        for s in sorts:
-            o = MOptions()
-            o.value = s[0]
-            o.text = s[1]
-            self.sorts.append(o)
-        context["sorts"] = self.sorts
         context['sort'] = self.sort
         context['session_key'] = get_session_key(self.request)
         context['ip'] = get_client_ip(self.request)

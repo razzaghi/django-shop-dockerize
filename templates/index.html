@@ -17,35 +17,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="category">Category</label>
-                                    <select class="form-control" name="category" id="category">
-                                        {% if not selected_category %}
-                                            <option value="" selected>All</option>
-                                        {% else %}
-                                            <option value="0">All</option>
-                                        {% endif %}
-                                        {% for category in categories %}
-                                            {% if selected_category == category.id %}
-                                                <option value="{{ category.id }}" selected>{{ category.name }}</option>
-                                            {% else %}
-                                                <option value="{{ category.id }}">{{ category.name }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
+                                    {% include 'categories-dropdown.html' with selected_category=selected_category%}
 
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="category">Sort by</label>
-                                    <select class="form-control" name="sort" id="sort">
-                                        {% for s in sorts %}
-                                            {% if sort == s.value %}
-                                                <option value="{{ s.value }}" selected>{{ s.text }}</option>
-                                            {% else %}
-                                                <option value="{{ s.value }}">{{ s.text }}</option>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </select>
+                                    {% include 'sort-dropdown.html' with sort=sort %}
 
                                 </div>
                             </div>
