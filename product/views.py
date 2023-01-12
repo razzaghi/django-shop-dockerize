@@ -1,7 +1,5 @@
 import json
-import urllib
 
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
 
@@ -13,7 +11,6 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 
-import account.models
 from product.models import Product, Category
 
 def detail(request, id):
