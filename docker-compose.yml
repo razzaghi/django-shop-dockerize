@@ -16,7 +16,7 @@ services:
     image: mysql:5.7
     restart: always
     environment:
-      MYSQL_DATABASE: 'ecommerce_2'
+      MYSQL_DATABASE: 'ecommerce2'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: 'ecommerce'
       # You can use whatever password you like
