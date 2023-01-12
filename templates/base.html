@@ -202,11 +202,13 @@
     <script src="/static/assets/js/jquery-2.2.4.min.js"></script>
     <script src="/static/assets/js/jquery.waypoints.min.js"></script>
     <script src="/static/assets/js/infinite.min.js"></script>
-   <script>
-    var infinite = new Waypoint.Infinite({
+<script>
+           //load_more()
+       function load_more(){
+        let infinite = new Waypoint.Infinite({
+            container:'auto',
         element: $('.infinite-container')[0],
         handler: function(direction) {
-
     },
     offset: 'bottom-in-view',
 
@@ -215,26 +217,33 @@
     },
     onAfterPageLoad: function () {
     $('.spinner-border').hide();
+    infinite.destroy();
     }
 
     });
+       }
 
-    </script>
-    <script>
-        var infinite = new Waypoint.Infinite({
-            element: $('.infinite-container')[0],
-
-            offset: 'bottom-in-view',
-
-            onBeforePageLoad: function () {
-                $('.loading').show();
+       $(document).ready(function(){
+        $(document).on('click', '#like', function(event){
+          event.preventDefault();
+          var m_url = $(this).attr('m_data');
+          var p_id = $(this).attr('value');
+          $.ajax({
+            type: 'POST',
+            url: m_url,
+            data: {'product_id':p_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            dataType: 'json',
+            success: function(response){
+              $('#cart_buttons'+p_id.toString()).html(response['form'])
+              console.log($('#cart_buttons'+p_id.toString()).html(response['form']));
             },
-            onAfterPageLoad: function () {
-                $('.loading').hide();
-            }
-
+            error: function(rs, e){
+              console.log(rs.responseText);
+            },
+          });
         });
-    </script>
+  });
+</script>
 </body>
 
 </html>

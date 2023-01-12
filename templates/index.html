@@ -63,73 +63,23 @@
             </div>
             <div class="row infinite-container content-section">
                 {% for product in products %}
-                    <div class="col-12 col-md-4 mb-4 infinite-item">
-                        <div class="card card-main">
-                            <a href="?category={{ product.category_id }}" class="category link-no-line">
-                                📰{{ product.category }}
-                            </a>
-                            <a href="{{ product.tagged_url }}/" target="_blank">
-                                {% if product.disp_image %}
-                                    <img class="card__image" src="{{ product.disp_image }}"
-                                         alt="{{ product.name }}">
-                                {% endif %}
-                            </a>
-                            <div class="card-body">
-                                <ul class="list-unstyled d-flex justify-content-between off-price">
-                                    <li>
-                                    <div class="color-dot-blue">OFF {{ product.total_discount }}% ({{ product.total_discount_str }})</div>
-                                    <div> Code: {{ product.promo_code }}</div>
-                                    </li>
-                                    <li>
-                                    <del class="old-price price">${{ product.old_price }}</del>
-                                    <div class="final-price price">${{ product.final_price }}</div>
-                                    </li>
-                                </ul>
-                                <h3 class="h3 text-decoration-none text-dark">{{ product.name |slice:"0:35"}}</h3>
-                                <p class="card-text">
-                                    {{ product.title |slice:"0:130" }}
-                                </p>
-                                <a href="{{ product.tagged_url }}/" target="_blank" class="offer_button button"> Buy at Amazon  ➥</a>
-                                <div class="list-unstyled d-flex justify-content-between rating">
-                                    <div>
-                                        <div>Quality: </div>
-                                        <div>{{ product.product_score }}</div>
-                                    </div>
-                                    <div>
-                                        <div>Valuable: </div>
-                                        <div>{{ product.price_score }}</div>
-                                    </div>
-                                    <a href="{{ product.tagged_store_link }}" target="_blank" class="link-no-line">
-                                        <div>Store : </div>
-                                        <div>{{ product.store_score }}</div>
-                                    </a>
-                                </div>
-                            </div>
-                        <div class="like-dislike">
-
-    <form action="{% url 'dislike' product.id %}" method="post" name="dislike" id="dislikeform-{{ product.id }}">
-        {% csrf_token %}
-        <button type='submit' name='dislike' value="{{ product.id }}" class="btn btn-primary">❤️‍🔥</button>
-    </form>
-
-                        </div>
-                        </div>
-                        <div class="card_more_info">Amazon Price As of {{ product.create_date }} </div>
-                        <div class="card_more_info "><a href="/more-info" target="_blank">more info</a></div>
-                    </div>
+                    {% include 'product_cart.html' with product=product %}
                 {% endfor %}
 
             </div>
             {% if page_obj.has_next %}
                 <div>
-                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">Load more deals</a>
+                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+                    <button class="load-more-button" onclick="load_more()">Load more deals</button>
                 </div>
             {% else %}
+                <!--
                 <div class="d-flex justify-content-center" style="display:none;">
                     <div class="spinner-border" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                 </div>
+                -->
             {% endif %}
         </div>
 

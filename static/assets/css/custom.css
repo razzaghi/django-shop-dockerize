@@ -87,13 +87,18 @@ img.card__image {
 .card-text {
   min-height: 75px;
 }
-.infinite-more-link{
+.load-more-button{
     text-align: center;
     color: white;
     background: #fd7e14;
     font-weight: bold;
-    font-size: 200px;
     display: flow-root;
     width: 100%;
     padding: 10px;
+}
+.btn-like{
+    background: #0bff7e;
+}
+.btn-dislike{
+    background: #b02a37;
 }

@@ -1,0 +1,82 @@
+{% load custom_tags %}
+{% load static %}
+{% is_bought product user as m_is_bought %}
+{% is_ended product user as m_is_ended %}
+{% is_favorite product user as m_is_favorite %}
+{% is_liked product user as m_is_liked %}
+
+<form action="{% url 'commands' product.id %}" method="POST" class="like-bar">
+    {% csrf_token %}
+    <div class="like-cell" title="Like/Dislike this item">
+        {% with product.id|stringformat:'s' as product_id0 %}
+            {% with 'l_'|add:product_id0 as product_id %}
+                {% if m_is_liked %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-checked-icon">
+                        {% include 'svg/like.svg' %}
+                    </svg>
+                {% else %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-unchecked-icon">
+                        {% include 'svg/like.svg' %}
+                    </svg>
+                {% endif %}
+                <div class="action-counter blue">{{ product.likes_count }}</div>
+            {% endwith %}
+        {% endwith %}
+    </div>
+    <div class="like-cell"  title="Got this item">
+        {% with product.id|stringformat:'s' as product_id0 %}
+            {% with 'b_'|add:product_id0 as product_id %}
+                {% if m_is_bought %}
+                    <svg m_data="{% url 'commands' product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-checked-icon">
+                        {% include 'svg/got-it.svg' %}
+                    </svg>
+                {% else %}
+                    <svg m_data="{% url 'commands' product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-unchecked-icon">
+                        {% include 'svg/got-it.svg' %}
+                    </svg>
+                {% endif %}
+                <div class="action-counter blue">{{ product.bought_count }}</div>
+            {% endwith %}
+        {% endwith %}
+    </div>
+    <div class="like-cell"  title="Alert me if similar item found">
+        {% with product.id|stringformat:'s' as product_id0 %}
+            {% with 'f_'|add:product_id0 as product_id %}
+                {% if m_is_favorite %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-checked-icon">
+                        {% include 'svg/allert.svg' %}
+                    </svg>
+                {% else %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon green-unchecked-icon">
+                        {% include 'svg/allert.svg' %}
+                    </svg>
+                {% endif %}
+                <div class="action-counter blue">{{ product.favorites_count }}</div>
+            {% endwith %}
+        {% endwith %}
+    </div>
+    <div class="like-cell"  title="This item is not available now">
+        {% with product.id|stringformat:'s' as product_id0 %}
+            {% with 'e_'|add:product_id0 as product_id %}
+                {% if m_is_ended %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon red-checked-icon">
+                        {% include 'svg/promotion-end.svg' %}
+                    </svg>
+                {% else %}
+                    <svg m_data="{% url 'commands'  product_id %}" value="{{ product.id }}" type="submit" id="like"
+                         name="post_slug" class="m-btn icon red-unchecked-icon">
+                        {% include 'svg/promotion-end.svg' %}
+                    </svg>
+                {% endif %}
+                <div class="action-counter red">{{ product.ends_count }}</div>
+            {% endwith %}
+        {% endwith %}
+    </div>
+</form>

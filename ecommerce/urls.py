@@ -18,18 +18,18 @@ from django.contrib import admin
 from django.urls import path
 
 from ecommerce import settings
-from product import views
+from product import views as p_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.HomeView.as_view(),name='index'),
-    path('detail/<int:id>/', views.detail),
-    path('about', views.about),
-    path('more-info', views.more_info),
-    path('contact', views.contact),
-    path('submit-product', views.submit_product),
-    path('like/', views.like, name='like'),
-    path('dislike/<int:id>/', views.dislike, name='dislike'),
+    path('', p_views.HomeView.as_view(),name='index'),
+    path('detail/<int:id>/', p_views.detail),
+    path('about', p_views.about),
+    path('more-info', p_views.more_info),
+    path('contact', p_views.contact),
+    path('submit-product', p_views.submit_product),
+    path('commands/<str:command>/', p_views.commands, name='commands'),
+    path('p/<str:command>/', p_views.redirect, name='p'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

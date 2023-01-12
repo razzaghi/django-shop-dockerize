@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink" class="svg-sprite"
+        viewBox="0 0 512 512" >
+    <symbol id="filter">
+        <path d="M0 26h512v51.206L307.21 333.213v153.6l-102.404-51.208V333.213L0 77.206V26z" />
+    </symbol>
+    <symbol id="home">
+        <path d="M512 296l-96-96V56h-64v80l-96-96L0 296v16h64v160h160v-96h64v96h160V312h64v-16z" />
+    </symbol>
+</svg>

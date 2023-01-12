@@ -1,6 +1,11 @@
 import json
+import urllib
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+
+from account.models import CustomUser
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -8,6 +13,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 
+import account.models
 from product.models import Product, Category
 
 class MOptions:
@@ -23,30 +29,6 @@ sorts = [['new','Newest'],
          ['p_score_high','Score high'],
          ]
 
-def home(request):
-    products = Product.objects.all()
-    categories = Category.objects.all()
-    selected_category = 0
-    if request.GET:
-        query_string = request.GET.get("q", None)
-        category = request.GET.get("category", 0)
-        if query_string and category:
-            selected_category = category
-            products = Product.objects.filter(name__contains=query_string, category_id=category)
-        elif query_string:
-            products = Product.objects.filter(name__contains=query_string)
-        elif category:
-            selected_category = category
-            products = Product.objects.filter(category_id=category)
-
-    context = {
-        'products': products,
-        "categories": categories,
-        "q": request.GET.get("q", ""),
-        "selected_category": int(selected_category)
-    }
-
-    return render(request, 'index.html', context)
 
 
 def detail(request, id):
@@ -182,7 +164,7 @@ def contact(request):
 class HomeView(ListView):
     model = Product
     template_name = 'index.html'
-    paginate_by = 15  # if pagination is desired
+    paginate_by = 3  # if pagination is desired
     context_object_name = 'products'
 
     def get_queryset(self):
@@ -230,24 +212,82 @@ class HomeView(ListView):
             self.sorts.append(o)
         context["sorts"] = self.sorts
         context['sort'] = self.sort
+        context['session_key'] = get_session_key(self.request)
+        context['ip'] = get_client_ip(self.request)
+        context["user"] = get_user(self.request)
+
         return context
 
-def like(request, id):
-    if request.method == "POST":
-        #make sure user can't like the post more than once.
-        user = User.objects.get(username=request.user.username)
-        #find whatever post is associated with like
-        product = Product.objects.get(id=id)
+def get_user(request):
+    user = CustomUser.objects.filter(username=request.user.username).first()
+    if not user:
+        user = CustomUser.get_or_register_user(ip=get_client_ip(request),
+                                               session_key=get_session_key(request))
+    return user
 
-        # newLike = Like(user=user, post=post)
-        # newLike.alreadyLiked = True
-        #
-        # post.likes += 1
-        # #adds user to Post
-        # post.user_likes.add(user)
-        # post.save()
-        # newLike.save()
-        return HttpResponseRedirect(reverse('index'))
+def commands(request, command):
+    if request.method == "POST":
+        valuse = command.split('_')
+        user = get_user(request)
+        if len(valuse) > 1:
+            m_command = valuse[0]
+            id = valuse[1]
+            product = Product.objects.get(id=id)
+            if m_command == 'b':#boght it
+                if product.is_bought(user.id):
+                    product.buys.remove(user)
+                else:
+                    product.buys.add(user)
+            elif m_command == 'e':#ends
+                if product.is_ended(user.id):
+                    product.ends.remove(user)
+                else:
+                    product.ends.add(user)
+            elif m_command == 'f':#favorites
+                if product.is_favorite(user.id):
+                    product.favorites.remove(user)
+                else:
+                    product.favorites.add(user)
+            elif m_command == 'l':#liked it
+                if product.is_liked(user.id):
+                    product.likes.remove(user)
+                else:
+                    product.likes.add(user)
+            elif m_command == 's':#shares
+                if product.is_shared(user.id):
+                    product.shares.remove(user)
+                else:
+                    product.shares.add(user)
+            product.save()
+        else:
+            id = valuse[0]
+            product = Product.objects.get(id=id)
+        context = {
+            'product': product,
+            'user': user,
+        }
+        if request.is_ajax():
+            html = render_to_string('cart_buttons.html', context, request=request)
+            return JsonResponse({'form': html})
+        #return HttpResponseRedirect(reverse('index'))
+
+def redirect(request, command):
+    valuse = command.split('_')
+    user = get_user(request)
+    if len(valuse) > 1:
+        m_command = valuse[0]
+        uniq_code = valuse[1]
+        product = Product.objects.get(uniq_code=uniq_code)
+        if m_command == 'c':
+            if not product.is_clicked(user.id):
+                product.clicks.add(user)
+                product.save()
+    else:
+        uniq_code = valuse[0]
+        product = Product.objects.get(uniq_code=uniq_code)
+    #return HttpResponseRedirect("https://g.com")
+    return HttpResponseRedirect(product.tagged_url())
+
 
 def dislike(request, id):
     if request.method == "POST":
@@ -265,3 +305,18 @@ def dislike(request, id):
         # post.save()
         # newLike.save()
         return HttpResponseRedirect(reverse('index'))
+
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
+def get_session_key(request):
+    if not request.session.session_key:
+        request.session.create()
+    return request.session.session_key

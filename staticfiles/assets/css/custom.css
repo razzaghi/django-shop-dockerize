@@ -8,15 +8,15 @@ Custom Css
 }
 img.card__image {
     object-fit: scale-down;
-    max-height: 320px;
-    min-height: 320px;
-    min-width: 345px;
-    max-width: 345px;
+    max-height: 350px;
+    min-height: 350px;
+    min-width: 395px;
+    max-width: 395px;
 }
 
 .card-main {
-    min-width: 350px;
-    max-width: 350px;
+    min-width: 400px;
+    max-width: 400px;
 }
 .rating{
     background: floralwhite;
@@ -87,14 +87,18 @@ img.card__image {
 .card-text {
   min-height: 75px;
 }
-
-.infinite-more-link{
+.load-more-button{
     text-align: center;
     color: white;
     background: #fd7e14;
     font-weight: bold;
-    font-size: 200px;
     display: flow-root;
     width: 100%;
     padding: 10px;
+}
+.btn-like{
+    background: #0bff7e;
+}
+.btn-dislike{
+    background: #b02a37;
 }

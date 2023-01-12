@@ -1,0 +1,72 @@
+{% load custom_tags %}
+<div class="col-12 col-md-4 mb-4 infinite-item">
+    <div class="card card-main">
+    <div class="cart-head">
+        <a href="?category={{ product.category_id }}" class="category link-no-line">
+            📰{{ product.category }}
+        </a>
+        <div class="view-count">
+            {% views_count product user as m_views_count %}
+            👁️‍🗨️ ‍{{ m_views_count }}
+        </div>
+    </div>
+        <div class="product-table">
+            <div class="product-image">
+                {% with 'c_'|add:product.uniq_code as product_id %}
+                    <a href="{% url 'p' product_id %}" class="" target="_blank">
+                        {% if product.disp_image %}
+                            <img class="card__image" src="{{ product.disp_image }}"
+                                 alt="{{ product.name }}">
+                        {% endif %}
+                    </a>
+                {% endwith %}
+            </div>
+            <div class="like-dislike">
+                <div id="cart_buttons{{ product.id }}">
+                    {% include 'cart_buttons.html' with product=product user=user %}
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul class="list-unstyled d-flex justify-content-between off-price">
+                <li>
+                    <div class="color-dot-blue">OFF {{ product.total_discount }}%
+                        ({{ product.total_discount_str }})
+                    </div>
+                    <div> Code: {{ product.promo_code }}</div>
+                </li>
+                <li>
+                    <del class="old-price price">${{ product.old_price }}</del>
+                    <div class="final-price price">${{ product.final_price }}</div>
+                </li>
+            </ul>
+            <h3 class="h3 text-decoration-none text-dark">{{ product.name |slice:"0:35" }}</h3>
+            <p class="card-text">
+                {{ product.title |slice:"0:130" }}
+            </p>
+            {% with 'c_'|add:product.uniq_code as product_id %}
+                <!-- href="{{ product.tagged_url }}/"  "{% url 'commands' product_id %}" -->
+                <a href="{% url 'p' product_id %}" target="_blank" class="offer_button button"> Buy
+                    at
+                    Amazon ({{ product.clicks_count }}) ➥</a>
+            {% endwith %}
+            <div class="list-unstyled d-flex justify-content-between rating">
+                <div>
+                    <div>Quality:</div>
+                    <div>{{ product.product_score }}</div>
+                </div>
+                <div>
+                    <div>Valuable:</div>
+                    <div>{{ product.price_score }}</div>
+                </div>
+                <a href="{{ product.tagged_store_link }}" target="_blank" class="link-no-line">
+                    <div>Store :</div>
+                    <div>{{ product.store_score }}</div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="card_more_info">Amazon Price As of {{ product.create_date }} </div>
+    <div class="card_more_info "><a href="/more-info" target="_blank">more info</a></div>
+</div>

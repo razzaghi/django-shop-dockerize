@@ -32,6 +32,7 @@ services:
       # Where our data will be persisted
     volumes:
       - ecommerce-db:/var/lib/mysql
+
   nginx:
     build:
       context: ./nginx

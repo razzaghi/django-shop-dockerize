@@ -1,5 +1,6 @@
 from django.db import models
 from django.http import HttpResponse
+from account.models import CustomUser
 
 
 class Category(models.Model):
@@ -55,6 +56,15 @@ class Product(models.Model):
     channel = models.CharField(max_length=30, null=True, blank=True)
     agent_tag = models.CharField(max_length=30, null=True, blank=True)
     agent_username = models.CharField(max_length=30, null=True, blank=True)
+    #buttons data
+    likes = models.ManyToManyField(CustomUser, blank=True, related_name='likes')
+    views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
+    clicks = models.ManyToManyField(CustomUser, blank=True, related_name='clicks')
+    buys = models.ManyToManyField(CustomUser, blank=True, related_name='buys')
+    favorites = models.ManyToManyField(CustomUser, blank=True, related_name='favorites')
+    shares = models.ManyToManyField(CustomUser, blank=True, related_name='shares')
+    ends = models.ManyToManyField(CustomUser, blank=True, related_name='ends')
+    #views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
 
     @property
     def product_score(self):
@@ -72,12 +82,67 @@ class Product(models.Model):
         return Tools.star_html(r)
 
     @property
+    def bought_count(self):
+        return self.buys.count()
+
+    @property
+    def ends_count(self):
+        return self.ends.count()
+
+    @property
+    def favorites_count(self):
+        return self.favorites.count()
+
+    @property
+    def likes_count(self):
+        return self.likes.count()
+
+    @property
+    def shares_count(self):
+        return self.shares.count()
+
+    @property
+    def clicks_count(self):
+        return self.clicks.count()
+
+    @property
+    def views_count(self):
+        return self.views.count()
+
+    def _views_count_add(self,user):
+        if not self.views.filter(id=user.id).exists():
+            self.views.add(user)
+        return self.views.count()
+
+    def is_bought(self,user_id):
+        return self.buys.filter(id=user_id).exists()
+
+    def is_ended(self, user_id):
+        return self.ends.filter(id=user_id).exists()
+
+    def is_favorite(self, user_id):
+        return self.favorites.filter(id=user_id).exists()
+
+    def is_liked(self,user_id):
+        return self.likes.filter(id=user_id).exists()
+
+    def is_shared(self,user_id):
+        return self.shares.filter(id=user_id).exists()
+
+    def is_clicked(self,user_id):
+        return self.clicks.filter(id=user_id).exists()
+
+    def is_viewed(self,user_id):
+        return self.views.filter(id=user_id).exists()
+
+    @property
     def store_score(self):
         return Tools.star_html(self.s_score/2)
 
     @property
     def price_score(self):
         return Tools.star_html(self.price_status)
+
     @property
     def total_discount(self):
         return int(min(100,self.off_percent + (100-self.off_percent)*(self.discount_percent + self.coupon_off_percent)/100))
