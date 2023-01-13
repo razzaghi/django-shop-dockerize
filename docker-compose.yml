@@ -4,13 +4,10 @@ services:
   ecommerce:
     build:
       context: .
-
-#    volumes:
-#      - ecommerce:/app
-#      - ecommerce-media:/app/media
-#      - ecommerce-static:/app/static
     environment:
       - HOST=ecommerce.shamim.review
+    depends_on:
+      - ecommercedb
 
   ecommercedb:
     image: mysql:5.7
@@ -38,15 +35,11 @@ services:
       context: ./nginx
     restart: always
     ports:
-    - 80:80
-#    volumes:
-#      - ecommerce:/home/app/web
-#      - ecommerce-media:/home/app/web/media/
-#      - ecommerce-static:/home/app/web/static/
+      - 80:80
+    depends_on:
+      - ecommerce
+      - ecommercedb
 
 volumes:
-#  ecommerce:
-  ecommerce-db3:
-#  ecommerce-media:
-#  ecommerce-static:
+  ecommerce-db:
 
