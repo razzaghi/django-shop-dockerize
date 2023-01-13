@@ -143,7 +143,7 @@ def contact(request):
 class HomeView(ListView):
     model = Product
     template_name = 'index.html'
-    paginate_by = 3  # if pagination is desired
+    paginate_by = 15  # if pagination is desired
     context_object_name = 'products'
 
     def get_queryset(self):
@@ -242,15 +242,13 @@ def commands(request, command):
 
 def redirect(request, command):
     valuse = command.split('_')
-    user = get_user(request)
     if len(valuse) > 1:
         m_command = valuse[0]
         uniq_code = valuse[1]
         product = Product.objects.get(uniq_code=uniq_code)
         if m_command == 'c':
-            if not product.is_clicked(user.id):
-                product.clicks.add(user)
-                product.save()
+            if not product.is_clicked(request):
+                ActionsLog.add_action(request,product,ActionType.Click,1)
     else:
         uniq_code = valuse[0]
         product = Product.objects.get(uniq_code=uniq_code)

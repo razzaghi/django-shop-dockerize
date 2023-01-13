@@ -133,7 +133,7 @@ class Product(models.Model):
         return ActionsLog.get_action_status(requset,self,ActionType.Favorite,1)
 
     def is_liked(self,requset):
-        return ActionsLog.get_action_status(requset,self,ActionType.View,1)
+        return ActionsLog.get_action_status(requset,self,ActionType.Like,1)
 
     def is_shared(self,requset):
         return ActionsLog.get_action_status(requset,self,ActionType.Share,1)
@@ -281,8 +281,8 @@ class ActionType(Enum):
 
 class ActionsLog(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
-    user = models.OneToOneField(CustomUser,blank=True,null=True,on_delete=models.CASCADE)
-    product = models.OneToOneField(Product,on_delete=models.CASCADE,blank=True,null=True)
+    user = models.ForeignKey(CustomUser,blank=True,null=True,on_delete=models.CASCADE)
+    product = models.ForeignKey(Product,on_delete=models.CASCADE,blank=True,null=True)
     session_key = models.CharField(max_length=40,blank=True,null=True)
     ip = models.CharField(max_length=20,blank=True,null=True)
     action = models.CharField(choices=ActionType.choices(),max_length=20)
@@ -316,8 +316,9 @@ class ActionsLog(models.Model):
 
     @staticmethod
     def action_count(_product, _action_type):
-        return ActionsLog.objects.filter(product_id=_product.id,
-                                        action=_action_type.value).count()#aggregate(Sum('value'))['action__sum']
+        res = ActionsLog.objects.filter(product_id=_product.id,
+                                        action=_action_type.value).aggregate(Sum('value'))['value__sum']
+        return res if res else 0
 
 
 

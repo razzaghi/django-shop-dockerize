@@ -11,7 +11,7 @@ class ProductAdmin(ModelAdmin):
 
 @admin.register(models.ActionsLog)
 class ProductAdmin(ModelAdmin):
-    list_display = ("create_date","user","product","session_key","ip","action","value")
+    list_display = ("id","create_date","user","product","session_key","ip","action","value")
 
 @admin.register(models.Category)
 class ProductAdmin(ModelAdmin):
