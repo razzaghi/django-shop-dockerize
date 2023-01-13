@@ -306,7 +306,7 @@ class ActionsLog(models.Model):
         _session_key = User_Functions.get_session_key(request)
         _ip = User_Functions.get_client_ip(request)
         ActionsLog.objects.create(
-            user_id=_user.id,
+            user_id=_user.id if _user else None,
             product_id=_product.id,
             session_key=_session_key,
             ip=_ip,
