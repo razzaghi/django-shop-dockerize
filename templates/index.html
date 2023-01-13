@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
     <section class="bg-light">
         <div class="container py-5">
@@ -41,6 +42,7 @@
                 </div>
             </div>
             <div class="row infinite-container content-section">
+            <div class="list-header">Total matched items: {{ products_count }}</div>
                 {% for product in products %}
                     {% include 'product_cart.html' with product=product %}
                 {% endfor %}
@@ -49,7 +51,8 @@
             {% if page_obj.has_next %}
                 <div>
                     <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-                    <button class="load-more-button" onclick="load_more()">Load more deals</button>
+                    <button id="load_more_btn"  class="load-more-button" onclick="load_more()">Load more deals ({{ paginate_by }} items)</button>
+                    <div id="load_more_lbl" class="load-more-lable"></div>
                 </div>
             {% else %}
                 <!--

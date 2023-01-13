@@ -105,6 +105,11 @@ img.card__image {
     width: 100%;
     padding: 10px;
 }
+.load-more-lable{
+    text-align: center;
+    color: darkgrey;
+    width: 100%;
+}
 
 .m-btn{
     border: none;
@@ -202,7 +207,10 @@ img.card__image {
 	border-radius:50%;
 	position:relative}
 
-
+.list-header {
+    width: 100%;
+    color: darkgray;
+}
 
 
 

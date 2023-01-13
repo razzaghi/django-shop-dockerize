@@ -143,7 +143,7 @@ def contact(request):
 class HomeView(ListView):
     model = Product
     template_name = 'index.html'
-    paginate_by = 15  # if pagination is desired
+    paginate_by = 3  # if pagination is desired
     context_object_name = 'products'
 
     def get_queryset(self):
@@ -178,7 +178,9 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         self.selected_category = 0
         context = super().get_context_data(**kwargs)
-        self.get_queryset()
+        qs = self.get_queryset()
+        context["products_count"] = qs.count
+        context["paginate_by"] = self.paginate_by
         context['q'] = self.request.GET.get("q", '')
         context["selected_category"] = int(self.selected_category)
         context['sort'] = self.sort

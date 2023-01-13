@@ -1,5 +1,4 @@
 from enum import Enum
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -15,7 +14,6 @@ class CustomUser(AbstractUser):
             return user_
         else:
             return CustomUser.objects.create_user(username=f'{session_key}_{ip}'.replace('.', '_'),ip=ip,session_key=session_key)
-
 
     @staticmethod
     def get_user(request):
@@ -36,6 +34,7 @@ class CustomUser(AbstractUser):
             request.session.create()
         return request.session.session_key
 
+
 class ActionType(Enum):
     Like = "Like"
     Bought = "Bought"
@@ -49,7 +48,6 @@ class ActionType(Enum):
     def choices(cls):
         return tuple((i.name, i.value) for i in cls)
 
-
 class ActionsLog(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     user = models.OneToOneField(CustomUser,blank=True,null=True,on_delete=models.CASCADE)
@@ -58,14 +56,22 @@ class ActionsLog(models.Model):
     action = models.CharField(choices=ActionType.choices(),max_length=20)
     value = models.IntegerField(default=1)
 
-    def add_action(self,request,_action_type,_value):
+    @staticmethod
+    def get_action_status(request,_action_type,_value):
+        _user = CustomUser.get_user(request)
+        _session_key = CustomUser.get_session_key(request)
+        _ip = CustomUser.get_client_ip(request)
+        if _user:
+            return ActionsLog.bjects.filter(user=_user,action=_action_type,value=_value).last()
+        else:
+            return ActionsLog.objects.filter(session_key=_session_key,ip=_ip,action=_action_type,value=_value).last()
+
+    @staticmethod
+    def add_action(request,_action_type,_value):
         _user = CustomUser.get_user(request)
         _session_key = CustomUser.get_session_key(request)
         _ip = CustomUser.get_client_ip(request)
 
-    @staticmethod
-    def check_action():
-        pass
 
 
 
