@@ -1,8 +1,5 @@
 from django import template
 from product.models import Category
-from product.views import get_user
-from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -11,32 +8,32 @@ def categories():
     return Category.objects.all()
 
 @register.simple_tag
-def is_bought(product, user):
-    return product.is_bought(user.id)
+def is_bought(product, request):
+    return product.is_bought(request)
 
 
 @register.simple_tag
-def is_ended(product, user):
-    return product.is_ended(user.id)
+def is_ended(product, request):
+    return product.is_ended(request)
 
 
 @register.simple_tag
-def is_favorite(product, user):
-    return product.is_favorite(user.id)
+def is_favorite(product, request):
+    return product.is_favorite(request)
 
 
 @register.simple_tag
-def is_liked(product, user):
-    return product.is_liked(user.id)
+def is_liked(product, request):
+    return product.is_liked(request)
 
 
 @register.simple_tag
-def is_shared(product, user):
-    return product.is_shared(user.id)
+def is_shared(product, request):
+    return product.is_shared(request)
 
 @register.simple_tag
-def views_count(product, user):
-    return product._views_count_add(user)
+def views_count(product, request):
+    return product._views_count_add(request)
 
 
 

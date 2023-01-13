@@ -1,9 +1,9 @@
 {% load custom_tags %}
 {% load static %}
-{% is_bought product user as m_is_bought %}
-{% is_ended product user as m_is_ended %}
-{% is_favorite product user as m_is_favorite %}
-{% is_liked product user as m_is_liked %}
+{% is_bought product request as m_is_bought %}
+{% is_ended product request as m_is_ended %}
+{% is_favorite product request as m_is_favorite %}
+{% is_liked product request as m_is_liked %}
 
 <form action="{% url 'commands' product.id %}" method="POST" class="like-bar">
     {% csrf_token %}

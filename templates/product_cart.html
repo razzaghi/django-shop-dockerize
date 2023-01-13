@@ -6,7 +6,7 @@
             📰{{ product.category }}
         </a>
         <div class="view-count">
-            {% views_count product user as m_views_count %}
+            {% views_count product request as m_views_count %}
             👁️‍🗨️ ‍{{ m_views_count }}
         </div>
     </div>
@@ -23,7 +23,7 @@
             </div>
             <div class="like-dislike">
                 <div id="cart_buttons{{ product.id }}">
-                    {% include 'cart_buttons.html' with product=product user=user %}
+                    {% include 'cart_buttons.html' with product=product request=request %}
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView
 
-from product.models import Product, Category
+from product.models import Product, Category, ActionsLog, ActionType
 
 def detail(request, id):
     product = Product.objects.get(id=id)
@@ -184,7 +184,7 @@ class HomeView(ListView):
         context['q'] = self.request.GET.get("q", '')
         context["selected_category"] = int(self.selected_category)
         context['sort'] = self.sort
-        context["user"] = get_user(self.request)
+        context["request"] = self.request
 
         return context
 
@@ -198,43 +198,42 @@ def get_user(request):
 def commands(request, command):
     if request.method == "POST":
         valuse = command.split('_')
-        user = get_user(request)
         if len(valuse) > 1:
             m_command = valuse[0]
             id = valuse[1]
             product = Product.objects.get(id=id)
             if m_command == 'b':#boght it
-                if product.is_bought(user.id):
-                    product.buys.remove(user)
+                if product.is_bought(request):
+                    ActionsLog.add_action(request,product,ActionType.Bought,-1)
                 else:
-                    product.buys.add(user)
+                    ActionsLog.add_action(request,product,ActionType.Bought,1)
             elif m_command == 'e':#ends
-                if product.is_ended(user.id):
-                    product.ends.remove(user)
+                if product.is_ended(request):
+                    ActionsLog.add_action(request,product,ActionType.End,-1)
                 else:
-                    product.ends.add(user)
+                    ActionsLog.add_action(request,product,ActionType.End,1)
             elif m_command == 'f':#favorites
-                if product.is_favorite(user.id):
-                    product.favorites.remove(user)
+                if product.is_favorite(request):
+                    ActionsLog.add_action(request,product,ActionType.Favorite,-1)
                 else:
-                    product.favorites.add(user)
+                    ActionsLog.add_action(request,product,ActionType.Favorite,1)
             elif m_command == 'l':#liked it
-                if product.is_liked(user.id):
-                    product.likes.remove(user)
+                if product.is_liked(request):
+                    ActionsLog.add_action(request,product,ActionType.Like,-1)
                 else:
-                    product.likes.add(user)
+                    ActionsLog.add_action(request,product,ActionType.Like,1)
             elif m_command == 's':#shares
-                if product.is_shared(user.id):
-                    product.shares.remove(user)
+                if product.is_shared(request):
+                    ActionsLog.add_action(request,product,ActionType.Share,-1)
                 else:
-                    product.shares.add(user)
+                    ActionsLog.add_action(request,product,ActionType.Share,1)
             product.save()
         else:
             id = valuse[0]
             product = Product.objects.get(id=id)
         context = {
             'product': product,
-            'user': user,
+            'request': request,
         }
         if request.is_ajax():
             html = render_to_string('cart_buttons.html', context, request=request)

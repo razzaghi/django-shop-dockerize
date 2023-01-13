@@ -1,4 +1,8 @@
+from enum import Enum
+
 from django.db import models
+from django.db.models import Sum
+
 from account.models import CustomUser
 
 
@@ -62,14 +66,14 @@ class Product(models.Model):
     agent_tag = models.CharField(max_length=30, null=True, blank=True)
     agent_username = models.CharField(max_length=30, null=True, blank=True)
     #buttons data
-    likes = models.ManyToManyField(CustomUser, blank=True, related_name='likes')
-    views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
-    clicks = models.ManyToManyField(CustomUser, blank=True, related_name='clicks')
-    buys = models.ManyToManyField(CustomUser, blank=True, related_name='buys')
-    favorites = models.ManyToManyField(CustomUser, blank=True, related_name='favorites')
-    shares = models.ManyToManyField(CustomUser, blank=True, related_name='shares')
-    ends = models.ManyToManyField(CustomUser, blank=True, related_name='ends')
-    #views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
+    # likes = models.ManyToManyField(CustomUser, blank=True, related_name='likes')
+    # views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
+    # clicks = models.ManyToManyField(CustomUser, blank=True, related_name='clicks')
+    # buys = models.ManyToManyField(CustomUser, blank=True, related_name='buys')
+    # favorites = models.ManyToManyField(CustomUser, blank=True, related_name='favorites')
+    # shares = models.ManyToManyField(CustomUser, blank=True, related_name='shares')
+    # ends = models.ManyToManyField(CustomUser, blank=True, related_name='ends')
+    # #views = models.ManyToManyField(CustomUser, blank=True, related_name='views')
 
     @property
     def product_score(self):
@@ -88,57 +92,57 @@ class Product(models.Model):
 
     @property
     def bought_count(self):
-        return self.buys.count()
+        return ActionsLog.action_count(self,ActionType.Bought)
 
     @property
     def ends_count(self):
-        return self.ends.count()
+        return ActionsLog.action_count(self,ActionType.End)
 
     @property
     def favorites_count(self):
-        return self.favorites.count()
+        return ActionsLog.action_count(self,ActionType.Favorite)
 
     @property
     def likes_count(self):
-        return self.likes.count()
+        return ActionsLog.action_count(self,ActionType.Like)
 
     @property
     def shares_count(self):
-        return self.shares.count()
+        return ActionsLog.action_count(self,ActionType.Share)
 
     @property
     def clicks_count(self):
-        return self.clicks.count()
+        return ActionsLog.action_count(self,ActionType.Click)
 
     @property
     def views_count(self):
-        return self.views.count()
+        return ActionsLog.action_count(self,ActionType.View)
 
-    def _views_count_add(self,user):
-        if not self.views.filter(id=user.id).exists():
-            self.views.add(user)
-        return self.views.count()
+    def _views_count_add(self, requset):
+        if not self.is_viewed(requset):
+            ActionsLog.add_action(requset,self,ActionType.View,1)
+        return ActionsLog.action_count(self,ActionType.View)
 
-    def is_bought(self,user_id):
-        return self.buys.filter(id=user_id).exists()
+    def is_bought(self,requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.Bought,1)
 
-    def is_ended(self, user_id):
-        return self.ends.filter(id=user_id).exists()
+    def is_ended(self, requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.End,1)
 
-    def is_favorite(self, user_id):
-        return self.favorites.filter(id=user_id).exists()
+    def is_favorite(self, requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.Favorite,1)
 
-    def is_liked(self,user_id):
-        return self.likes.filter(id=user_id).exists()
+    def is_liked(self,requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.View,1)
 
-    def is_shared(self,user_id):
-        return self.shares.filter(id=user_id).exists()
+    def is_shared(self,requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.Share,1)
 
-    def is_clicked(self,user_id):
-        return self.clicks.filter(id=user_id).exists()
+    def is_clicked(self,requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.Click,1)
 
-    def is_viewed(self,user_id):
-        return self.views.filter(id=user_id).exists()
+    def is_viewed(self,requset):
+        return ActionsLog.get_action_status(requset,self,ActionType.View,1)
 
     @property
     def store_score(self):
@@ -232,7 +236,94 @@ class Product(models.Model):
         return self.name
 
 
+class User_Functions:
+    @staticmethod
+    def get_or_register_user(ip,session_key):
+        user_ = CustomUser.objects.filter(ip=ip,session_key=session_key).first()
+        if user_:
+            return user_
+        else:
+            return CustomUser.objects.create_user(username=f'{session_key}_{ip}'.replace('.', '_'),ip=ip,session_key=session_key)
+
+    @staticmethod
+    def get_user(request):
+        user = CustomUser.objects.filter(username=request.user.username).first()
+        return user
+
+    @staticmethod
+    def get_client_ip(request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[-1].strip()
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    @staticmethod
+    def get_session_key(request):
+        if not request.session.session_key:
+            request.session.create()
+        return request.session.session_key
+
+
+class ActionType(Enum):
+    Like = "Like"
+    Bought = "Bought"
+    Share = "Share"
+    Favorite = "Favorite"
+    End = "End"
+    View = "View"
+    Click = "Click"
+
+    @classmethod
+    def choices(cls):
+        return tuple((i.name, i.value) for i in cls)
+
+class ActionsLog(models.Model):
+    create_date = models.DateTimeField(auto_now_add=True)
+    user = models.OneToOneField(CustomUser,blank=True,null=True,on_delete=models.CASCADE)
+    product = models.OneToOneField(Product,on_delete=models.CASCADE,blank=True,null=True)
+    session_key = models.CharField(max_length=40,blank=True,null=True)
+    ip = models.CharField(max_length=20,blank=True,null=True)
+    action = models.CharField(choices=ActionType.choices(),max_length=20)
+    value = models.IntegerField(default=1)
+
+    @staticmethod
+    def get_action_status(request,_product,_action_type,_value):
+        _user = User_Functions.get_user(request)
+        _session_key = User_Functions.get_session_key(request)
+        _ip = User_Functions.get_client_ip(request)
+        if _user:
+            res = ActionsLog.objects.filter(user_id=_user.id,product_id=_product.id,action=_action_type.value).last()
+        else:
+            res = ActionsLog.objects.filter(session_key=_session_key,ip=_ip,product_id=_product.id,action=_action_type.value).last()
+        if res:
+            return res.value == _value
+
+    @staticmethod
+    def add_action(request,_product,_action_type,_value):
+        _user = User_Functions.get_user(request)
+        _session_key = User_Functions.get_session_key(request)
+        _ip = User_Functions.get_client_ip(request)
+        ActionsLog.objects.create(
+            user_id=_user.id,
+            product_id=_product.id,
+            session_key=_session_key,
+            ip=_ip,
+            action=_action_type.value,
+            value=_value
+        )
+
+    @staticmethod
+    def action_count(_product, _action_type):
+        return ActionsLog.objects.filter(product_id=_product.id,
+                                        action=_action_type.value).count()#aggregate(Sum('value'))['action__sum']
+
+
+
 class Tools:
     @staticmethod
     def star_html(rate=5):
         return '✅✅✅✅' if rate>=4.5 else '✅✅✅' if rate>=3 else '✅✅' if rate>=2 else '✅'
+
+

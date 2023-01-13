@@ -44,7 +44,7 @@
             <div class="row infinite-container content-section">
             <div class="list-header">Total matched items: {{ products_count }}</div>
                 {% for product in products %}
-                    {% include 'product_cart.html' with product=product %}
+                    {% include 'product_cart.html' with product=product request=request %}
                 {% endfor %}
 
             </div>
